@@ -9,10 +9,10 @@ for (const page of ['index.html', 'design/index.html']) {
   assert.ok(credit, `${page}: Anna Kamchatka credit link is missing`);
   assert.match(credit[1], /Создание сайта:/);
   assert.match(credit[1], />AK</);
-  assert.match(credit[1], /ANNA KAMCHATKA/);
+  assert.doesNotMatch(credit[1], /ANNA KAMCHATKA/, 'credit must not contain the removed name');
   assert.match(credit[1], /annakam\.ru/);
 }
 
 const styles = fs.readFileSync(path.join(root, 'design/stage.css'), 'utf8');
 assert.match(styles, /\.site-credit/, 'credit badge needs footer styling');
-console.log('footer credit: Anna Kamchatka link and badge styling are present');
+console.log('footer credit: AK link and badge styling are present without the removed name');
