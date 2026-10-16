@@ -17,6 +17,7 @@ def package(destination):
         'design/experience.css', 'design/motion-bundle.js',
         'design/ribbon-webgl-bundle.js', 'design/v2-experience.js',
         'design/reference-effects.css', 'design/reference-effects.js',
+        'design/spiral-lines.svg',
         'design/privacy.html', 'design/soglasie.html', 'design/materials.html',
     }
     media_extensions = {'.svg', '.jpg', '.jpeg', '.png', '.webp', '.avif', '.gif', '.woff', '.woff2', '.mp4', '.webm'}

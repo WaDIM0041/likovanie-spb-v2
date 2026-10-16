@@ -1,4 +1,28 @@
 /* V2 refinements: keep controls in flow and the photograph fully visible. */
+/* Fine ribbon contours extend the opening sculpture across light sections. */
+.stage-home main > :is(.stage-banner,#why,#programs,#directions,#teachers,#prices,#schedule,#reviews,#enrol) {
+  position: relative;
+  isolation: isolate;
+}
+.stage-home main > :is(.stage-banner,#why,#programs,#directions,#teachers,#prices,#schedule,#reviews,#enrol)::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: url('spiral-lines.svg') center / 100% 100% no-repeat;
+  opacity: .72;
+}
+.stage-home main > :is(#directions,#prices,#reviews)::before { transform: scaleX(-1); opacity: .6; }
+.stage-home .stage-banner.has-ribbon::before { opacity: 1; }
+@media (max-width:700px) {
+  .stage-home main > :is(.stage-banner,#why,#programs,#directions,#teachers,#prices,#schedule,#reviews,#enrol)::before {
+    background-size: 850px 100%;
+    background-position: 55% center;
+    opacity: .48;
+  }
+}
+
 .stage-controls { display: contents; }
 .stage-home .teacher-grid article { grid-template-rows: auto 1fr; }
 .stage-home .teacher-grid article > picture { display: block; grid-column: 1; grid-row: 1 / 3; min-width: 0; }

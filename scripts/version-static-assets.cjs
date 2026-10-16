@@ -1,7 +1,7 @@
 // Update cache keys without rebuilding the already verified motion bundles.
 const fs = require('node:fs');
 const {createHash} = require('node:crypto');
-const files = ['design/style.css', 'design/stage.css', 'design/experience.css', 'design/motion-bundle.js', 'design/ribbon-webgl-bundle.js', 'design/v2-experience.js', 'design/reference-effects.css', 'design/reference-effects.js'];
+const files = ['design/style.css', 'design/stage.css', 'design/experience.css', 'design/motion-bundle.js', 'design/ribbon-webgl-bundle.js', 'design/v2-experience.js', 'design/reference-effects.css', 'design/reference-effects.js', 'design/spiral-lines.svg'];
 const hash = createHash('sha256');
 files.forEach(file => hash.update(fs.readFileSync(file)));
 const version = hash.digest('hex').slice(0, 12);
