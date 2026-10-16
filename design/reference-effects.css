@@ -82,6 +82,43 @@
 .stage-home #programs .program-detail figure { overflow: visible; background: transparent; }
 .stage-home #programs .program-detail figure > picture { display: block; }
 .stage-home #programs .program-detail figcaption { margin-inline-start: -24px; }
+.stage-home #programs .program-detail figcaption {
+  position: relative;
+  display: table;
+  max-width: 100%;
+  padding: 14px 0 10px;
+  color: #234541;
+  font-size: clamp(14px, 1.15vw, 17px);
+  font-weight: 600;
+  line-height: 1.55;
+  letter-spacing: .015em;
+  text-transform: none;
+  text-wrap: pretty;
+  border-bottom: 1px solid #00a6a630;
+  transition: color .45s ease;
+}
+.stage-home #programs .program-detail figcaption::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 -1px;
+  height: 2px;
+  background: linear-gradient(90deg, #008282, #00a6a6 55%, #d97b28);
+  box-shadow: 0 2px 9px #00a6a62b;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .75s cubic-bezier(.22, 1, .36, 1);
+}
+.stage-home #programs .program-detail figure:hover figcaption,
+.stage-home #programs .program-detail figure:focus-within figcaption { color: #006e6e; }
+.stage-home #programs .program-detail figure:hover figcaption::after,
+.stage-home #programs .program-detail figure:focus-within figcaption::after { transform: scaleX(1); }
+@media (hover: none) {
+  .stage-home #programs .program-detail figcaption::after { transform: scaleX(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .stage-home #programs .program-detail figcaption,
+  .stage-home #programs .program-detail figcaption::after { transition: none; }
+}
 @media (max-width: 700px) {
   .stage-home #programs .program-detail figcaption { margin-inline-start: -4px; }
 }
