@@ -9,6 +9,24 @@
     };
     menu.addEventListener('click', () => setMenu(!navigation.classList.contains('is-open')));
     navigation.addEventListener('click', event => { if (event.target.closest('a')) setMenu(false); });
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape' && navigation.classList.contains('is-open')) { setMenu(false); menu.focus({preventScroll: true}); }
+    });
+    document.addEventListener('pointerdown', event => {
+      if (!menu.contains(event.target) && !navigation.contains(event.target)) setMenu(false);
+    });
+    matchMedia('(max-width: 700px)').addEventListener('change', () => setMenu(false));
+  }
+
+  const scene = document.querySelector('.hero');
+  if (scene) {
+    const controls = document.createElement('div');
+    controls.className = 'stage-controls';
+    for (const selector of ['.hero-scene-picker', '.scene-autoplay-toggle', '.motion-toggle']) {
+      const control = scene.querySelector(selector);
+      if (control) controls.append(control);
+    }
+    scene.append(controls);
   }
 
   const dialog = document.querySelector('#gallery-lightbox');
@@ -16,21 +34,73 @@
   if (dialog && galleryItems.length) {
     const image = dialog.querySelector('img');
     const caption = dialog.querySelector('[data-gallery-caption]');
-    let activeIndex = 0;
-    const show = index => {
-      activeIndex = (index + galleryItems.length) % galleryItems.length;
-      const item = galleryItems[activeIndex];
-      image.src = item.querySelector('source')?.srcset || item.href;
-      image.alt = item.querySelector('img')?.alt || '';
-      caption.textContent = `${activeIndex + 1} / ${galleryItems.length}`;
-    };
+    const stage = document.createElement('div'); stage.className = 'gallery-stage';
+    image.before(stage); stage.append(image);
+    const status = document.createElement('p'); status.className = 'gallery-status'; status.setAttribute('role', 'status');
+    stage.after(status); caption.setAttribute('aria-live', 'polite');
+    let requestedIndex = 0, displayedIndex = -1, request = 0, animation;
+    let opener, pageY = 0, bodyStyles, swipe;
+    const normalized = index => (index + galleryItems.length) % galleryItems.length;
+    const source = index => galleryItems[index].querySelector('source')?.srcset || galleryItems[index].href;
+    const prefetch = index => { const next = new Image(); next.src = source(normalized(index)); };
+    async function show(index) {
+      requestedIndex = normalized(index);
+      const selected = requestedIndex, current = ++request;
+      dialog.setAttribute('aria-busy', 'true'); status.textContent = 'Загружаем фотографию…';
+      const next = new Image(); next.src = source(selected);
+      try { await next.decode(); } catch {
+        next.src = galleryItems[selected].href;
+        try { await next.decode(); } catch {
+          if (current === request && dialog.open) {
+            status.textContent = 'Фото не загрузилось. Выберите другое или попробуйте ещё раз.';
+            dialog.setAttribute('aria-busy', 'false'); requestedIndex = Math.max(displayedIndex, 0);
+          }
+          return;
+        }
+      }
+      if (current !== request || !dialog.open) return;
+      animation?.cancel(); stage.querySelectorAll('.gallery-outgoing').forEach(element => element.remove());
+      let outgoing;
+      if (image.getAttribute('src') && displayedIndex !== selected) {
+        outgoing = image.cloneNode(); outgoing.className = 'gallery-outgoing'; outgoing.alt = '';
+        outgoing.setAttribute('aria-hidden', 'true'); stage.prepend(outgoing);
+      }
+      image.src = next.src; image.alt = galleryItems[selected].querySelector('img')?.alt || '';
+      displayedIndex = selected; caption.textContent = `${selected + 1} / ${galleryItems.length}`;
+      status.textContent = ''; dialog.setAttribute('aria-busy', 'false');
+      if (outgoing) {
+        outgoing.animate({opacity: [1, 0]}, {duration: 600, easing: 'cubic-bezier(.22,1,.36,1)'});
+        animation = image.animate({opacity: [0, 1]}, {duration: 600, easing: 'cubic-bezier(.22,1,.36,1)'});
+        animation.finished.then(() => outgoing.remove()).catch(() => outgoing.remove());
+      }
+      prefetch(selected - 1); prefetch(selected + 1);
+    }
     galleryItems.forEach((item, index) => item.addEventListener('click', event => {
-      event.preventDefault(); show(index); dialog.showModal();
+      event.preventDefault(); opener = item; pageY = scrollY; bodyStyles = document.body.style.cssText;
+      Object.assign(document.body.style, {position: 'fixed', top: `${-pageY}px`, left: '0', right: '0', width: '100%'});
+      document.documentElement.classList.add('gallery-open'); image.removeAttribute('src'); image.alt = '';
+      displayedIndex = -1; caption.textContent = ''; dialog.showModal(); show(index);
     }));
-    dialog.querySelector('[data-gallery-next]').addEventListener('click', () => show(activeIndex + 1));
-    dialog.querySelector('[data-gallery-prev]').addEventListener('click', () => show(activeIndex - 1));
+    dialog.querySelector('[data-gallery-next]').addEventListener('click', () => show(requestedIndex + 1));
+    dialog.querySelector('[data-gallery-prev]').addEventListener('click', () => show(requestedIndex - 1));
     dialog.querySelector('[data-gallery-close]').addEventListener('click', () => dialog.close());
     dialog.addEventListener('click', event => { if (event.target === dialog) dialog.close(); });
+    dialog.addEventListener('keydown', event => {
+      if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') { event.preventDefault(); show(requestedIndex + (event.key === 'ArrowRight' ? 1 : -1)); }
+    });
+    stage.addEventListener('pointerdown', event => { if (event.pointerType === 'touch') swipe = {x: event.clientX, y: event.clientY}; });
+    stage.addEventListener('pointercancel', () => { swipe = null; });
+    stage.addEventListener('pointerup', event => {
+      if (!swipe) return;
+      const x = event.clientX - swipe.x, y = event.clientY - swipe.y; swipe = null;
+      if (Math.abs(x) > 45 && Math.abs(x) > Math.abs(y) * 1.3) show(requestedIndex + (x < 0 ? 1 : -1));
+    });
+    dialog.addEventListener('close', () => {
+      ++request; animation?.cancel(); stage.querySelectorAll('.gallery-outgoing').forEach(element => element.remove());
+      dialog.setAttribute('aria-busy', 'false'); document.body.style.cssText = bodyStyles;
+      document.documentElement.classList.remove('gallery-open'); window.scrollTo({top: pageY, behavior: 'instant'});
+      opener?.focus({preventScroll: true});
+    });
   }
 
   const schedule = document.querySelector('#schedule');
@@ -42,5 +112,60 @@
       filters.forEach(item => item.setAttribute('aria-pressed', String(item === filter)));
       groups.forEach(group => { group.hidden = selected !== 'all' && group.dataset.scheduleGroup !== selected; });
     }));
+  }
+
+  const trialAge = document.querySelector('#form-0-2');
+  const selection = document.querySelector('#enrol-selection');
+  const ages = ['2,5–3 года', '4–5 лет', '6–7 лет', '8–17 лет', '18+'];
+  function chooseAge(index) {
+    if (!trialAge) return;
+    trialAge.value = ages[index]; trialAge.dispatchEvent(new Event('change', {bubbles: true}));
+  }
+  document.querySelectorAll('[data-age]').forEach(button => button.addEventListener('click', () => chooseAge(Number(button.dataset.age))));
+  document.querySelector('#choose-program')?.addEventListener('click', () => {
+    const selected = document.querySelector('[data-age][aria-pressed="true"]');
+    if (selected) chooseAge(Number(selected.dataset.age));
+  });
+  trialAge?.addEventListener('change', () => {
+    if (selection) selection.textContent = trialAge.value ? `Выбрана группа: ${trialAge.value}. Школа уточнит подходящее расписание.` : '';
+  });
+
+  document.querySelectorAll('.review-grid article').forEach((article, index) => {
+    const quote = article.querySelector('blockquote');
+    if (!quote || quote.textContent.trim().length < 260) return;
+    quote.id = `review-${index + 1}`; article.classList.add('review-collapsible');
+    const button = document.createElement('button'); button.type = 'button'; button.className = 'review-toggle';
+    button.setAttribute('aria-controls', quote.id); button.setAttribute('aria-expanded', 'false'); button.textContent = 'Читать полностью';
+    let animation;
+    button.addEventListener('click', () => {
+      animation?.cancel(); const before = quote.getBoundingClientRect().height;
+      const expanded = button.getAttribute('aria-expanded') !== 'true';
+      article.classList.toggle('review-expanded', expanded); button.setAttribute('aria-expanded', String(expanded));
+      button.textContent = expanded ? 'Свернуть отзыв' : 'Читать полностью';
+      const after = quote.getBoundingClientRect().height;
+      animation = quote.animate({height: [`${before}px`, `${after}px`]}, {duration: 450, easing: 'cubic-bezier(.22,1,.36,1)'});
+    });
+    article.append(button);
+  });
+
+  const banner = document.querySelector('.stage-banner');
+  if (banner && scene) {
+    for (const element of [banner, scene]) {
+      const light = document.createElement('div'); light.className = 'light-transfer'; light.setAttribute('aria-hidden', 'true'); element.append(light);
+    }
+    let frame = 0;
+    function updateLight() {
+      frame = 0;
+      if (document.hidden || scene.querySelector('.motion-toggle')?.getAttribute('aria-pressed') === 'true') return;
+      const progress = Math.max(0, Math.min(1, (innerHeight - scene.getBoundingClientRect().top) / (innerHeight * .85)));
+      const intensity = 4 * progress * (1 - progress);
+      for (const element of [banner, scene]) {
+        element.style.setProperty('--handoff-progress', progress.toFixed(3)); element.style.setProperty('--handoff-light', intensity.toFixed(3));
+      }
+    }
+    const requestLight = () => { if (!frame) frame = requestAnimationFrame(updateLight); };
+    addEventListener('scroll', requestLight, {passive: true}); addEventListener('resize', requestLight);
+    document.addEventListener('visibilitychange', requestLight);
+    scene.querySelector('.motion-toggle')?.addEventListener('click', requestLight); updateLight();
   }
 })();

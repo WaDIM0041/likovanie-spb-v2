@@ -1,0 +1,75 @@
+/* V2 refinements: keep controls in flow and the photograph fully visible. */
+.stage-controls { display: contents; }
+.stage-home .teacher-grid article { grid-template-rows: auto 1fr; }
+.stage-home .teacher-grid article > picture { display: block; grid-column: 1; grid-row: 1 / 3; min-width: 0; }
+.stage-home .teacher-grid article > h3 { grid-column: 2; grid-row: 1; }
+.stage-home .teacher-grid article > p { grid-column: 2; grid-row: 2; }
+
+/* A stable frame lets photographs crossfade without moving the controls. */
+html.gallery-open { overflow: hidden; }
+#gallery-lightbox { width: min(94vw, 1100px); height: min(88svh, 820px); max-height: none; overflow: hidden; }
+#gallery-lightbox figure { display: flex; flex-direction: column; width: 100%; height: 100%; max-height: none; }
+.gallery-stage { position: relative; flex: 1; min-height: 0; overflow: hidden; touch-action: pan-y pinch-zoom; }
+#gallery-lightbox .gallery-stage img { position: absolute; inset: 0; width: 100%; height: 100%; max-height: none; object-fit: contain; }
+#gallery-lightbox .gallery-stage img:not([src]) { visibility: hidden; }
+.gallery-status { min-height: 18px; margin: 0; padding: 0 55px; text-align: center; color: #d9d9d9; font-size: 12px; }
+.gallery-status:empty { display: none; }
+.gallery-close { z-index: 3; }
+.gallery-nav { z-index: 2; }
+
+.stage-home .enrol-grid { display: block; max-width: 740px; margin-inline: auto; }
+.enrol-details { margin-top: 24px; border-top: 1px solid #11111155; }
+.enrol-details > summary, .enrol-options > summary { padding: 16px 0; font-size: 14px; font-weight: 600; cursor: pointer; }
+.stage-home .enrol-details > form { margin: 0; }
+.enrol-options { margin: 6px 0 22px; }
+.enrol-options[open] { padding-bottom: 10px; }
+#enrol-selection { font-size: 14px; line-height: 1.6; }
+#enrol-selection:empty { display: none; }
+.program-links { display: flex; gap: 20px; flex-wrap: wrap; font-size: 13px; margin-top: 18px; }
+.review-collapsible:not(.review-expanded) blockquote { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4; line-clamp: 4; overflow: hidden; }
+.review-toggle { min-height: 44px; margin-top: 12px; padding: 10px 0; border: 0; border-bottom: 1px solid #99470055; background: transparent; color: #994700; font-size: 13px; }
+
+/* The light follows the scroll from the ribbon banner to the stage. */
+.light-transfer { position: absolute; width: 95%; height: 125%; right: -25%; top: -15%; z-index: 1; pointer-events: none; opacity: var(--handoff-light, 0); transform: translate3d(0, calc(var(--handoff-progress, 0) * 15%), 0) rotate(calc(-35deg + var(--handoff-progress, 0) * 55deg)); transform-origin: 50% 0; background: conic-gradient(from 166deg at 50% 0%, transparent 0deg, #00a6a600 3deg, #00a6a625 14deg, #f5822029 19deg, transparent 31deg); mask-image: linear-gradient(#000, transparent 88%); }
+.stage-banner > .light-transfer { opacity: calc(var(--handoff-light, 0) * .8); }
+.hero > .light-transfer { mix-blend-mode: screen; opacity: calc(var(--handoff-light, 0) * .7); }
+
+@media (min-width: 701px) and (max-width: 1100px) {
+  .stage-home .teacher-grid article:not(:first-child) { display: block; }
+  .stage-home .teacher-grid article:not(:first-child) h3 { margin-top: 20px; margin-bottom: 14px; }
+}
+
+@media (max-width: 700px) {
+  html:has(.stage-home) { scroll-padding-top: 92px; }
+  .stage-home header { grid-template-columns: minmax(0, 1fr) auto auto; gap: 12px; padding: 12px 5vw; }
+  .stage-home header .brand { display: inline-flex; align-items: center; min-width: 0; font-size: 26px; }
+  .stage-home header .brand-logo { flex: none; float: none; width: 22px; height: 40px; margin-right: 8px; }
+  .stage-home header .header-contact { grid-column: 2; grid-row: 1; }
+  .stage-home .menu-toggle { grid-column: 3; grid-row: 1; min-width: 72px; min-height: 44px; padding: 10px; }
+  .stage-home header nav a { min-height: 44px; display: flex; align-items: center; }
+  .stage-home .hero { height: auto; min-height: 0; }
+  .stage-home .hero-photo { position: relative; inset: auto; width: 100%; height: auto; aspect-ratio: 1280 / 853; }
+  .stage-home .hero-photo img, .stage-home .hero-photo .scene-transition-image { position: absolute; inset: 0; width: 100%; height: 100%; padding: 0; object-fit: contain; object-position: center; }
+  .stage-home .hero-photo::after { background: linear-gradient(0deg, #11111122, transparent 15%); }
+  .stage-home .hero-photo figcaption { left: 6vw; right: 6vw; top: 12px; text-align: right; font-size: 8px; overflow-wrap: anywhere; }
+  .stage-home .hero-wordmark { display: none; }
+  .stage-home .stage-controls { position: relative; z-index: 5; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 14px 5vw 20px; background: #111111; }
+  .stage-home .hero-scene-picker { position: static; grid-column: 1 / -1; display: flex; gap: 8px; width: 100%; }
+  .stage-home .hero-scene-picker button { min-width: 0; min-height: 44px; flex: 1; padding: 0 5px; font-size: 9px; }
+  .stage-home .stage-controls .scene-autoplay-toggle, .stage-home .stage-controls .motion-toggle { position: static; align-self: stretch; width: 100%; min-height: 44px; max-width: none; margin: 0; padding: 10px 6px; font-size: 9px; }
+  .stage-home .stage-controls .motion-toggle { border: 1px solid #ffffff33; background: #ffffff08; }
+  .stage-home .hero-scroll { display: none; }
+  .stage-home .teacher-grid article, .stage-home .teacher-grid article:first-child { display: block; }
+  .stage-home .mobile-quick-actions { bottom: 0; left: 0; right: 0; padding: 5px 8px calc(5px + env(safe-area-inset-bottom, 0px)); }
+  .stage-home .mobile-quick-actions a { min-height: 44px; display: flex; align-items: center; justify-content: center; font-size: 12px; }
+  .stage-home footer { padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px)); }
+  #gallery-lightbox { width: 100vw; max-width: 100vw; height: min(94svh, 1000px); }
+  #gallery-lightbox figcaption { padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
+  .gallery-nav, .gallery-close { width: 44px; height: 44px; }
+}
+
+@media (max-width: 380px) {
+  .stage-home header { grid-template-columns: minmax(0, 1fr) auto; }
+  .stage-home header .header-contact { display: none; }
+  .stage-home .menu-toggle { grid-column: 2; }
+}

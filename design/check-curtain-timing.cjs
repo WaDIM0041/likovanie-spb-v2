@@ -7,7 +7,7 @@ const {chromium} = require(require.resolve('playwright', {paths: [process.env.PL
       const page = await browser.newPage({viewport:{width,height:width < 700 ? 844 : 900}});
       let releasePhoto;
       const photoReady = new Promise(resolve => {releasePhoto = resolve;});
-      await page.route('**/research/assets/041.jpg', async route => {await photoReady;await route.fallback();});
+      await page.route('**/research/assets/041.{jpg,webp}', async route => {await photoReady;await route.fallback();});
       await page.goto(process.env.SITE_URL || 'http://127.0.0.1:8000/', {waitUntil:'domcontentloaded'});
       await page.waitForFunction(() => document.documentElement.dataset.motionEngine === 'framer-motion');
       await page.waitForTimeout(150);

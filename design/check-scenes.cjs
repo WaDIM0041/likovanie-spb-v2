@@ -7,9 +7,10 @@ const {chromium}=require(require.resolve('playwright',{paths:[process.env.PLAYWR
   const errors=[];page.on('pageerror',e=>errors.push(e.message));
   await page.goto(process.env.SITE_URL||'http://127.0.0.1:8000/');
   await page.waitForFunction(()=>document.documentElement.dataset.motionEngine==='framer-motion');
-  const layout=await page.evaluate(()=>({scene:document.querySelector('.hero').getBoundingClientRect().height,photo:document.querySelector('.hero-photo').getBoundingClientRect().height,available:innerHeight-document.querySelector('header').getBoundingClientRect().height}));
+  const layout=await page.evaluate(()=>({scene:document.querySelector('.hero').getBoundingClientRect().height,photo:document.querySelector('.hero-photo').getBoundingClientRect().height,width:document.querySelector('.hero-photo').getBoundingClientRect().width,controls:document.querySelector('.stage-controls').getBoundingClientRect().height,available:innerHeight-document.querySelector('header').getBoundingClientRect().height}));
   assert.ok(layout.scene<=layout.available,'Mobile scene fits below the sticky header');
-  assert.ok(layout.photo>=layout.scene-1,'Mobile photograph fills its scene instead of leaving a tall empty region');
+  assert.ok(Math.abs(layout.photo/layout.width-853/1280)<.02,'Mobile photograph keeps its complete aspect ratio');
+  assert.ok(Math.abs(layout.photo+layout.controls-layout.scene)<2,'The mobile scene contains the photograph and controls without an empty region');
   await page.locator('.hero').evaluate(el=>scrollTo({top:el.getBoundingClientRect().top+scrollY-document.querySelector('header').getBoundingClientRect().height,behavior:'instant'}));
   const first=await page.locator('.hero-photo img').first().getAttribute('src');
   await page.waitForFunction(src=>document.querySelector('.hero-photo img').getAttribute('src')!==src,first,{timeout:11000});

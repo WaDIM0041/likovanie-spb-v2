@@ -24,7 +24,8 @@ const { chromium } = require(require.resolve('playwright', { paths: ['/opt/codex
     await page.locator('#gallery a[data-gallery-item]').first().click();
     const dialog = page.locator('#gallery-lightbox');
     await assert.equal(await dialog.evaluate(el => el.open), true, 'gallery should open in a site lightbox');
-    await assert.ok(await dialog.locator('img').getAttribute('src'), 'lightbox should show a selected image');
+    await page.waitForFunction(() => document.querySelector('#gallery-lightbox img:not([aria-hidden])').naturalWidth > 0);
+    await assert.ok(await dialog.locator('img:not([aria-hidden])').getAttribute('src'), 'lightbox should show a selected image');
     await dialog.locator('[data-gallery-next]').click();
     await assert.equal(await dialog.evaluate(el => el.open), true, 'gallery should remain open while browsing');
     await dialog.locator('[data-gallery-close]').click();
