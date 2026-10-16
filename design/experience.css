@@ -73,3 +73,7 @@ html.gallery-open { overflow: hidden; }
   .stage-home header .header-contact { display: none; }
   .stage-home .menu-toggle { grid-column: 2; }
 }
+
+/* Keep decorative scene layers inside the viewport without changing vertical scrolling. */
+.stage-home { overflow-x: clip; }
+html:has(> .stage-home) { overflow-x: clip; }

@@ -75,7 +75,8 @@
   animation: reference-border-turn 4s linear infinite paused;
 }
 
-.stage-home .ref-photo { position: relative; overflow: hidden; }
+.stage-home .ref-photo { overflow: hidden; }
+.stage-home .ref-photo:not(.hero-photo) { position: relative; }
 .stage-home .teacher-grid article > .ref-photo,
 .stage-home .program-detail .ref-photo { border-radius: 16px; }
 .stage-home .ref-photo img,

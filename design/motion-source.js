@@ -259,15 +259,21 @@ function start() {
   if (reduced()) return;
   startAmbience();
   play(entrance, { opacity: [0, 1], y: [48, 0] }, { duration: 0.85, delay: stagger(0.12), ease });
-  // Preserve the published reveal: wait for the photograph, then open over 2.2s.
+  // Keep the curtain closed until the scene itself enters the viewport.
+  let revealCancelled = false;
   const revealPhoto = () => {
+    if (revealCancelled || reduced()) return;
     play(photo, { opacity: [0.35, 1], scale: [1.04, 1] }, { duration: 1.5, ease }).then(() => {
+      if (revealCancelled || reduced()) return;
       play(curtains[0], {x: ['0%', '-100%']}, {duration: 2.2, ease});
       play(curtains[1], {x: ['0%', '100%']}, {duration: 2.2, ease});
     });
   };
-  if (photo.complete && photo.naturalWidth) revealPhoto();
-  else photo.addEventListener('load', revealPhoto, {once: true});
+  disposers.push(() => { revealCancelled = true; photo.removeEventListener('load', revealPhoto); });
+  disposers.push(inView(stageSection, () => {
+    if (photo.complete && photo.naturalWidth) revealPhoto();
+    else photo.addEventListener('load', revealPhoto, {once: true});
+  }, {amount: 0.2}));
   revealGroups.forEach(group => {
     const children = [...group.children];
     disposers.push(inView(children, element => {
