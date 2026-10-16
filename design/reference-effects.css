@@ -1,0 +1,166 @@
+/* Artbalkon reference: a warm outline, rising fill, moving light and slow zoom. */
+.stage-home { --ref-accent: #c9a45c; --ref-accent-rgb: 201, 164, 92; }
+.stage-home .ref-button,
+.stage-home .stage-controls .ref-button {
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid rgba(var(--ref-accent-rgb), .75);
+  border-radius: 999px;
+  background: rgba(11, 12, 14, .54);
+  background-image: none;
+  color: #f4f6fa;
+  box-shadow: 0 0 18px rgba(var(--ref-accent-rgb), .35), inset 0 0 10px rgba(var(--ref-accent-rgb), .08);
+  animation: none;
+  transition: background-color .55s, border-color .55s, color .55s, box-shadow .55s, translate .55s cubic-bezier(.22, 1, .36, 1);
+}
+.stage-home .ref-button:not(.motion-toggle):not(.scene-autoplay-toggle):not(.gallery-nav):not(.gallery-close) { position: relative; }
+.stage-home .ref-button::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: inherit;
+  background: #454c54;
+  transform: translateY(101%);
+  transition: transform .6s cubic-bezier(.16, 1, .3, 1);
+}
+.stage-home .ref-button:not(.button)::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -70%;
+  width: 45%;
+  pointer-events: none;
+  transform: skew(-18deg);
+  background: linear-gradient(100deg, transparent, #ffffff32 50%, transparent);
+  transition: left .9s cubic-bezier(.16, 1, .3, 1);
+}
+.stage-home .hero-scene-picker .ref-button[aria-pressed="true"] {
+  background: linear-gradient(105deg, #8a6a1f, #e6c86e 45%, #c9a45c);
+  color: #0b0c0e;
+  border-color: #e6c86e;
+}
+
+/* Extra layers preserve existing counters, grid cells and reveal transforms. */
+.stage-home .ref-card {
+  position: relative;
+  isolation: isolate;
+  border-radius: 20px;
+  transition: translate .55s cubic-bezier(.22, 1, .36, 1), scale .55s cubic-bezier(.22, 1, .36, 1), box-shadow .5s, border-color .5s, background-color .5s;
+}
+.reference-card-spot, .reference-card-border {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity .5s;
+}
+.reference-card-spot {
+  z-index: -1;
+  background: radial-gradient(420px circle at var(--ref-x, 50%) var(--ref-y, 50%), #f0a35a20, transparent 65%);
+}
+@property --reference-angle { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+@keyframes reference-border-turn { to { --reference-angle: 360deg; } }
+.reference-card-border {
+  z-index: 3;
+  padding: 1px;
+  background: conic-gradient(from var(--reference-angle), #f0a35a22, #f0a35a 55deg, #ffc98a 110deg, #f0a35a22 195deg, #f0a35a22 360deg);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  animation: reference-border-turn 4s linear infinite paused;
+}
+
+.stage-home .ref-photo { position: relative; overflow: hidden; }
+.stage-home .teacher-grid article > .ref-photo,
+.stage-home .program-detail .ref-photo { border-radius: 16px; }
+.stage-home .ref-photo img,
+.stage-home #gallery .gallery-grid .ref-photo img,
+.stage-home :is(.achievement-layout, .program-detail, .teacher-grid, .review-grid) .ref-photo img {
+  scale: 1;
+  transition: scale 1.4s cubic-bezier(0, 0, .2, 1), transform 1.4s cubic-bezier(0, 0, .2, 1), filter 1.1s ease-in-out;
+}
+.stage-home .hero-photo.ref-photo::before,
+.stage-home #gallery .gallery-grid a.ref-photo::after { content: none; }
+.reference-photo-sheen, .stage-home picture.ref-photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(115deg, transparent 35%, #ffffff24 48%, transparent 62%);
+  transform: translateX(-120%);
+  transition: transform .9s cubic-bezier(.22, 1, .36, 1);
+}
+
+/* The icons and brand colors follow the reference footer; URLs belong to the school. */
+.stage-home footer { gap: 30px; }
+.stage-home footer .footer-socials { grid-column: 1 / -1; justify-self: center; order: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+.stage-home footer .footer-social-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border: 1px solid rgba(var(--social-rgb), .4);
+  border-radius: 12px;
+  background: rgba(var(--social-rgb), .08);
+  color: rgb(var(--social-rgb));
+  text-decoration: none;
+  text-shadow: none;
+  transition: translate .45s, box-shadow .45s, background-color .45s, border-color .45s;
+}
+.footer-social-link svg { display: block; width: 20px; height: 20px; flex: none; }
+.footer-social-link .social-yandex { font: 700 23px/1 Arial, sans-serif; }
+.footer-social-link--vk { --social-rgb: 100, 145, 201; }
+.footer-social-link--telegram { --social-rgb: 63, 189, 242; }
+.footer-social-link--whatsapp { --social-rgb: 37, 211, 102; }
+.footer-social-link--yandex { --social-rgb: 252, 63, 29; }
+.stage-home footer .footer-legal { grid-column: 1 / -1; display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 24px; text-align: center; }
+
+@media (hover: hover) and (pointer: fine) {
+  .stage-home .ref-button:hover, .stage-home .stage-controls .ref-button:hover {
+    color: #fff;
+    border-color: #e6c86e;
+    box-shadow: 0 0 28px rgba(var(--ref-accent-rgb), .45), inset 0 1px #ffffff24;
+  }
+  .stage-home .ref-button:hover::before { transform: translateY(0); }
+  .stage-home .ref-button:hover::after { left: 130%; }
+  .stage-home .hero-scene-picker .ref-button[aria-pressed="true"]:hover { color: #fff; }
+  .stage-home .ref-card:hover {
+    translate: 0 -4px;
+    scale: 1.008;
+    box-shadow: 0 14px 34px -10px #00000050, 0 0 24px -4px #f0a35a38;
+    border-color: #f0a35a80;
+  }
+  .ref-card:hover > .reference-card-spot, .ref-card:hover > .reference-card-border { opacity: 1; animation-play-state: running; }
+  .stage-home .ref-photo:hover img, .stage-home .ref-card:hover .ref-photo img,
+  .stage-home #gallery .gallery-grid .ref-photo:hover img,
+  .stage-home :is(.achievement-layout, .program-detail, .teacher-grid, .review-grid) .ref-photo:hover img,
+  .stage-home .teacher-grid .ref-card:hover .ref-photo img { scale: 1.06; filter: brightness(1.05) saturate(1.08); }
+  .stage-home #gallery .gallery-grid a.ref-photo:hover img { transform: none; }
+  .stage-home .hero-photo.ref-photo:hover img { filter: brightness(1.14) contrast(1.06) saturate(1.14); }
+  .ref-photo:hover > .reference-photo-sheen, .ref-card:hover .reference-photo-sheen,
+  .stage-home picture.ref-photo:hover::after, .stage-home .ref-card:hover picture.ref-photo::after { transform: translateX(120%); }
+  .stage-home footer .footer-social-link:hover {
+    color: rgb(var(--social-rgb));
+    translate: 0 -4px;
+    background: rgba(var(--social-rgb), .14);
+    border-color: rgba(var(--social-rgb), .7);
+    box-shadow: 0 0 22px rgba(var(--social-rgb), .2);
+    text-shadow: none;
+  }
+}
+.stage-home .ref-button:focus-visible::before { transform: translateY(0); }
+.stage-home .ref-button:focus-visible { color: #fff; }
+.stage-home .hero-scene-picker .ref-button[aria-pressed="true"]:focus-visible { color: #fff; }
+.ref-card:focus-within > .reference-card-spot, .ref-card:focus-within > .reference-card-border { opacity: 1; }
+.stage-home footer .footer-social-link:focus-visible { color: rgb(var(--social-rgb)); box-shadow: 0 0 22px rgba(var(--social-rgb), .3); }
+@media (prefers-reduced-motion: reduce) {
+  html:not([data-motion-preference="manual"]) .reference-card-border { animation: none; }
+}
