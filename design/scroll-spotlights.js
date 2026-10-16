@@ -2,10 +2,10 @@ import {scroll} from 'framer-motion/dom';
 
 // The sources stay fixed; only their aim follows the section's scroll progress.
 const sources = [
-  {pivot: 12, start: -35, sweep: -30, color: 'gold'},
-  {pivot: 27, start: -12, sweep: -42, color: 'turquoise'},
-  {pivot: 88, start: 35, sweep: 30, color: 'pearl'},
-  {pivot: 73, start: 12, sweep: 42, color: 'gold'}
+  {pivot: 12, start: -18, sweep: -60, color: 'gold'},
+  {pivot: 27, start: 18, sweep: -84, color: 'turquoise'},
+  {pivot: 88, start: 18, sweep: 60, color: 'pearl'},
+  {pivot: 73, start: -18, sweep: 84, color: 'gold'}
 ];
 
 export function createScrollSpotlights() {
