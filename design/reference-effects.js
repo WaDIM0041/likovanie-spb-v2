@@ -32,7 +32,7 @@
       card.addEventListener('pointermove', followPointer, {passive: true});
     });
 
-  document.querySelectorAll('.hero-photo, .achievement-layout figure, .program-detail figure, .teacher-grid article > picture, #gallery .gallery-grid a')
+  document.querySelectorAll('.hero-photo, .achievement-layout figure, .program-detail figure > picture, .teacher-grid article > picture, #gallery .gallery-grid a')
     .forEach(photo => {
       photo.classList.add('ref-photo');
       if (photo.tagName !== 'PICTURE') {

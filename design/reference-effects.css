@@ -79,6 +79,12 @@
 .stage-home .ref-photo:not(.hero-photo) { position: relative; }
 .stage-home .teacher-grid article > .ref-photo,
 .stage-home .program-detail .ref-photo { border-radius: 16px; }
+.stage-home #programs .program-detail figure { overflow: visible; background: transparent; }
+.stage-home #programs .program-detail figure > picture { display: block; }
+.stage-home #programs .program-detail figcaption { margin-inline-start: -24px; }
+@media (max-width: 700px) {
+  .stage-home #programs .program-detail figcaption { margin-inline-start: -4px; }
+}
 .stage-home .ref-photo img,
 .stage-home #gallery .gallery-grid .ref-photo img,
 .stage-home :is(.achievement-layout, .program-detail, .teacher-grid, .review-grid) .ref-photo img {
