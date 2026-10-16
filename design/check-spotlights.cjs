@@ -13,6 +13,11 @@ const {chromium} = require(require.resolve('playwright', {
     page.on('pageerror', error => errors.push(error.message));
     await page.goto(process.env.SITE_URL || 'http://127.0.0.1:8000/');
     await page.waitForFunction(() => document.documentElement.dataset.motionEngine === 'framer-motion');
+    const galleryToggle = page.locator('.gallery-toggle');
+    if (await galleryToggle.count() && await galleryToggle.getAttribute('aria-expanded') === 'false') {
+      await galleryToggle.click();
+      await page.waitForFunction(() => !document.querySelector('.gallery-reveal').hasAttribute('aria-busy'));
+    }
     assert.equal(await page.locator('#gallery .scroll-spotlight').count(), 4, 'Gallery has four distinct spotlight cones');
     assert.equal(await page.locator('#teachers .scroll-spotlight').count(), 4, 'Light sections also have spotlight cones');
     await page.evaluate(() => scrollTo({top: document.querySelector('#achievements').getBoundingClientRect().top + scrollY, behavior: 'instant'}));

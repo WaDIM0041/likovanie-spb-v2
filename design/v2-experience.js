@@ -29,6 +29,82 @@
     scene.append(controls);
   }
 
+  const gallerySection = document.querySelector('#gallery');
+  const galleryGrid = gallerySection?.querySelector('.gallery-grid');
+  if (galleryGrid && galleryGrid.children.length > 4) {
+    const items = [...galleryGrid.children], previewCount = 4;
+    const viewport = document.createElement('div');
+    viewport.className = 'gallery-reveal'; viewport.id = 'gallery-photos';
+    galleryGrid.before(viewport); viewport.append(galleryGrid);
+    const tools = document.createElement('div'); tools.className = 'gallery-tools';
+    const toggle = document.createElement('button');
+    toggle.type = 'button'; toggle.className = 'button gallery-toggle';
+    toggle.setAttribute('aria-controls', viewport.id);
+    const count = document.createElement('p'); count.className = 'gallery-count';
+    count.setAttribute('role', 'status');
+    tools.append(toggle, count); viewport.after(tools);
+    let expanded = false, revision = 0, animations = [];
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+    function updateControls() {
+      toggle.setAttribute('aria-expanded', String(expanded));
+      toggle.textContent = expanded ? 'Свернуть галерею' : 'Смотреть галерею';
+      count.textContent = expanded ? `${items.length} фотографий` : `${previewCount} из ${items.length} фотографий`;
+    }
+    function settle() {
+      animations.splice(0).forEach(animation => animation.cancel());
+      viewport.style.height = ''; viewport.classList.remove('is-animating');
+      viewport.removeAttribute('aria-busy');
+    }
+    function play(element, frames, options) {
+      const animation = element.animate(frames, options); animations.push(animation);
+      return animation.finished.catch(() => {});
+    }
+    async function setExpanded(next) {
+      const current = ++revision;
+      const fromHeight = viewport.getBoundingClientRect().height;
+      const before = items.slice(0, previewCount).map(item => item.getBoundingClientRect());
+      settle(); expanded = next; updateControls();
+      viewport.style.height = `${fromHeight}px`;
+      viewport.classList.add('is-animating'); viewport.setAttribute('aria-busy', 'true');
+      gallerySection.classList.toggle('gallery-folded', !expanded);
+      items.forEach((item, index) => { item.hidden = !expanded && index >= previewCount; });
+      const toHeight = galleryGrid.getBoundingClientRect().height;
+      if (reduced.matches) { settle(); return; }
+      const duration = expanded ? 850 : 600;
+      const pending = [play(viewport, [{height: `${fromHeight}px`}, {height: `${toHeight}px`}], {
+        duration, easing: 'cubic-bezier(.22,1,.36,1)', fill: 'both'
+      })];
+      items.slice(0, previewCount).forEach((item, index) => {
+        const after = item.getBoundingClientRect(), prior = before[index];
+        if (!after.width || !after.height) return;
+        pending.push(play(item, [
+          {transform: `translate(${prior.left-after.left}px,${prior.top-after.top}px) scale(${prior.width/after.width},${prior.height/after.height})`},
+          {transform: 'translate(0,0) scale(1)'}
+        ], {duration, easing: 'cubic-bezier(.22,1,.36,1)', fill: 'both'}));
+      });
+      if (expanded) items.slice(previewCount).forEach((item, index) => {
+        const drift = [-48, 34, -22, 52][index % 4], turn = [-9, 7, -5, 10][index % 4];
+        pending.push(play(item, [
+          {opacity: 0, transform: `translate(${drift}px,-85px) rotate(${turn}deg) scale(.84)`},
+          {opacity: 1, transform: 'translate(0,0) rotate(0deg) scale(1)'}
+        ], {duration: 780, delay: Math.min(index, 12) * 38, easing: 'cubic-bezier(.18,.8,.25,1)', fill: 'both'}));
+      });
+      await Promise.all(pending);
+      if (current !== revision) return;
+      settle();
+      if (!expanded) {
+        const top = gallerySection.getBoundingClientRect().top + scrollY;
+        if (scrollY > top) scrollTo({top: Math.max(0, top - document.querySelector('header').offsetHeight - 20), behavior: 'smooth'});
+        toggle.focus({preventScroll: true});
+      }
+    }
+    gallerySection.classList.add('gallery-folded');
+    items.slice(previewCount).forEach(item => { item.hidden = true; }); updateControls();
+    toggle.addEventListener('click', () => setExpanded(!expanded));
+    reduced.addEventListener('change', () => { ++revision; settle(); });
+    addEventListener('pagehide', () => { ++revision; settle(); });
+  }
+
   const dialog = document.querySelector('#gallery-lightbox');
   const galleryItems = [...document.querySelectorAll('#gallery a[data-gallery-item]')];
   if (dialog && galleryItems.length) {

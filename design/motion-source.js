@@ -185,7 +185,7 @@ const stageLights = [...document.querySelectorAll('.hero, .school, .contacts')].
 const beams = tag('.stage-beam, .stage-orbit');
 const marquee = tag('.stage-marquee-track')[0];
 const parallaxPhoto = tag('.hero-photo')[0];
-const revealGroups = [...document.querySelectorAll('.section-head, .direction-grid, .teacher-grid, .review-grid, .schedule-grid, .gallery-grid, .video-grid, .achievement-layout, .offer-grid, .enrol-grid')];
+const revealGroups = [...document.querySelectorAll('.section-head, .direction-grid, .teacher-grid, .review-grid, .schedule-grid, .video-grid, .achievement-layout, .offer-grid, .enrol-grid')];
 revealGroups.forEach(group => [...group.children].forEach(el => el.dataset.motion = 'true'));
 const progressBar = document.createElement('div');
 progressBar.className = 'scroll-progress';
