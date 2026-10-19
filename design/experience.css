@@ -117,3 +117,14 @@ html.gallery-open { overflow: hidden; }
 /* Keep decorative scene layers inside the viewport without changing vertical scrolling. */
 .stage-home { overflow-x: clip; }
 html:has(> .stage-home) { overflow-x: clip; }
+
+/* Original achievements artwork stays fully visible at every screen size. */
+.stage-home #achievements .achievement-layout .achievement-art img {
+  width: 100%;
+  height: auto;
+  max-height: min(760px, calc(100svh - 160px));
+  object-fit: contain;
+  object-position: center;
+  transform: none;
+}
+.stage-home #achievements .achievement-art.ref-photo:hover img { scale: 1.025; }
