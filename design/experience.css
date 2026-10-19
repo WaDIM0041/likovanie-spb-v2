@@ -118,13 +118,33 @@ html.gallery-open { overflow: hidden; }
 .stage-home { overflow-x: clip; }
 html:has(> .stage-home) { overflow-x: clip; }
 
-/* Original achievements artwork stays fully visible at every screen size. */
-.stage-home #achievements .achievement-layout .achievement-art img {
-  width: 100%;
-  height: auto;
-  max-height: min(760px, calc(100svh - 160px));
-  object-fit: contain;
-  object-position: center;
-  transform: none;
+/* A single stage: artwork, moving light, then readable achievements. */
+.stage-home #achievements { position: relative; isolation: isolate; }
+.achievement-backdrop { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: clip; }
+.achievement-backdrop picture { display: block; height: 100%; }
+.stage-home #achievements .achievement-backdrop img {
+  width: 72%; height: 100%; object-fit: cover; object-position: center;
+  opacity: .94;
 }
-.stage-home #achievements .achievement-art.ref-photo:hover img { scale: 1.025; }
+.achievement-backdrop::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(90deg, #11111115 10%, #11111138 35%, #111111dc 63%, #111111f2 100%),
+    linear-gradient(0deg, #111111 0%, transparent 15%, transparent 85%, #111111c9 100%);
+}
+.stage-home #achievements > .scroll-lights { z-index: 1; opacity: .85; }
+.stage-home #achievements > .section-head,
+.stage-home #achievements > .achievement-layout { position: relative; z-index: 2; }
+.stage-home #achievements .section-head h2 { text-shadow: 0 2px 28px #000; }
+.stage-home #achievements .achievement-layout { grid-template-columns: .92fr 1fr; }
+.stage-home #achievements .award-list { grid-column: 2; text-shadow: 0 2px 16px #000; }
+.stage-home #achievements .award-list > p { color: #f0eeea; }
+.stage-home #achievements .award-list article { padding: 25px 22px; background: #11111138; }
+@media (max-width: 700px) {
+  .achievement-backdrop picture { position: sticky; top: 70px; height: calc(100svh - 70px); }
+  .stage-home #achievements .achievement-backdrop img { width: 100%; object-position: center; opacity: .8; }
+  .achievement-backdrop::after { background: linear-gradient(90deg, #1111114d, #11111173), linear-gradient(0deg, #111111 0%, #11111144 22%, #11111155 85%, #111111c9 100%); }
+  .stage-home #achievements > .scroll-lights { opacity: .8; }
+  .stage-home #achievements .award-list > p { font-size: 15px; }
+  .stage-home #achievements .award-list article { padding: 22px 16px; margin-bottom: 12px; background: #111111b3; backdrop-filter: blur(3px); }
+  .stage-home #achievements .award-list h3 { font-size: clamp(22px, 6vw, 27px); }
+}

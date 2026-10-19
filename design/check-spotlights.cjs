@@ -22,6 +22,13 @@ const {chromium} = require(require.resolve('playwright', {
     assert.equal(await page.locator('#teachers .scroll-spotlight').count(), 4, 'Light sections also have spotlight cones');
     await page.evaluate(() => scrollTo({top: document.querySelector('#achievements').getBoundingClientRect().top + scrollY, behavior: 'instant'}));
     await page.waitForTimeout(1500);
+    await page.locator('#achievements').evaluate(async section => {
+      await Promise.all([...section.querySelectorAll('img')].map(image => image.decode()));
+      await document.fonts.ready;
+      await Promise.all(section.getAnimations({subtree: true})
+        .filter(animation => Number.isFinite(animation.effect.getTiming().iterations))
+        .map(animation => animation.finished.catch(() => {})));
+    });
     const lit = await page.screenshot({clip: {x: 0, y: 100, width: 1440, height: 250}});
     await page.locator('#achievements .scroll-lights').evaluate(el => {el.style.visibility = 'hidden';});
     const unlit = await page.screenshot({clip: {x: 0, y: 100, width: 1440, height: 250}});
