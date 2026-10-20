@@ -1,5 +1,8 @@
 # «Ликование» — новый сайт
 
+Рабочая версия V2: [открыть сайт в GitHub Pages](https://wadim0041.github.io/likovanie-spb-v2/).
+Все правки и проверки сначала выполняются здесь. Перенос на хостинг — отдельным проверенным выпуском для ручной загрузки владельцем. [Согласованный порядок работы](docs/working-workflow.md).
+
 Исследование и предложения от 13 октября 2026.
 
 - [План и состояние проекта](docs/project-plan.md)
@@ -14,7 +17,7 @@
 - Реестр изображений: `research/source/assets-manifest.json`
 
 Сайт-источник: https://likovanie-spb.ru/
-GitHub: https://github.com/WaDIM0041/likovanie-spb
+GitHub: https://github.com/WaDIM0041/likovanie-spb-v2
 
 Для продолжения работы в Codex на ПК: [инструкция и контекст проекта](docs/codex-handoff.md).
 
