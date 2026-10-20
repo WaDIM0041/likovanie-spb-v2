@@ -1,12 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 900" fill="none" preserveAspectRatio="none">
   <defs>
     <linearGradient id="ribbon" x1="0" y1="120" x2="1440" y2="780" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#008f92" stop-opacity=".3"/>
-      <stop offset=".45" stop-color="#df9a5c" stop-opacity=".2"/>
-      <stop offset="1" stop-color="#009c9e" stop-opacity=".35"/>
+      <stop stop-color="#008f92" stop-opacity=".55"/>
+      <stop offset=".45" stop-color="#cf8542" stop-opacity=".4"/>
+      <stop offset="1" stop-color="#009c9e" stop-opacity=".6"/>
     </linearGradient>
   </defs>
-  <g stroke="url(#ribbon)" stroke-width="1.35" vector-effect="non-scaling-stroke">
+  <g stroke="url(#ribbon)" stroke-width="2" vector-effect="non-scaling-stroke">
     <path d="M1500-80C1010-120 1300 190 870 260S-140 200 70 510 1060 940 1190 650 630 260 450 510 760 1080 1510 790"/>
     <path d="M1520-50C1040-90 1330 220 895 285S-110 230 95 535 1085 965 1215 675 650 290 475 540 785 1110 1535 815"/>
     <path d="M1480-110C980-150 1270 160 845 235S-170 170 45 485 1035 915 1165 625 610 230 425 480 735 1050 1485 765"/>
