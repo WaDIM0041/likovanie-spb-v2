@@ -203,7 +203,7 @@ html:has(> .stage-home) { overflow-x: clip; }
 
 /* Let the stage emerge through the banner instead of meeting a hard edge. */
 @supports (mask-image: linear-gradient(#000, transparent)) {
-  .stage-home { --scene-blend: clamp(110px, 12vw, 180px); }
+  .stage-home { --scene-blend: clamp(110px, 12vw, 180px); --chapter-blend: clamp(130px, 11vw, 180px); }
   .stage-home .stage-banner.has-portrait {
     z-index: 2;
     padding-bottom: calc(44px + var(--scene-blend));
@@ -217,9 +217,23 @@ html:has(> .stage-home) { overflow-x: clip; }
   .stage-home .stage-banner.has-portrait + .hero .hero-photo figcaption {
     top: calc(var(--scene-blend) + 20px);
   }
+  .stage-home #achievements {
+    z-index: 2;
+    padding-bottom: calc(40px + var(--chapter-blend));
+    -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - var(--chapter-blend)), transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 calc(100% - var(--chapter-blend)), transparent 100%);
+  }
+  .stage-home #achievements + #why {
+    z-index: 1;
+    margin-top: calc(0px - var(--chapter-blend));
+    padding-top: calc(55px + var(--chapter-blend));
+    background: #fff;
+  }
   @media (max-width: 700px) {
-    .stage-home { --scene-blend: 88px; }
+    .stage-home { --scene-blend: 88px; --chapter-blend: 104px; }
     .stage-home .stage-banner.has-portrait { padding-bottom: var(--scene-blend); }
     .stage-home .stage-banner.has-portrait + .hero .hero-photo figcaption { top: calc(var(--scene-blend) + 12px); }
+    .stage-home #achievements { padding-bottom: calc(30px + var(--chapter-blend)); }
+    .stage-home #achievements + #why { padding-top: calc(35px + var(--chapter-blend)); }
   }
 }
