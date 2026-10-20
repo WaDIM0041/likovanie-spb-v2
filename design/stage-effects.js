@@ -6,7 +6,7 @@ export function createStageEffects() {
   const layers=[];
   for(const selector of ['.stage-banner','#teachers','#gallery']) {
     const section=document.querySelector(selector);
-    if(!section)continue;
+    if(!section || section.classList.contains('has-portrait'))continue;
     section.classList.add('depth-section');
     const decor=document.createElement('div');decor.className='depth-decor';decor.setAttribute('aria-hidden','true');
     decor.innerHTML='<span class="depth-layer depth-halo"></span><span class="depth-layer depth-line"></span>';

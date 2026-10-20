@@ -4,7 +4,7 @@ import { createStageEffects } from './stage-effects.js';
 
 const media = matchMedia('(prefers-reduced-motion: reduce)');
 const narrow = matchMedia('(max-width: 700px)');
-const ribbonScene = createRibbonScene(document.querySelector('.stage-banner'));
+const ribbonScene = createRibbonScene(document.querySelector('.stage-banner:not(.has-portrait)'));
 const stageEffects = createStageEffects();
 const ease = [0.22, 1, 0.36, 1];
 const controls = new Set();

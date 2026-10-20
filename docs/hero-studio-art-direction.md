@@ -1,0 +1,15 @@
+# Главный баннер: ансамбль и студия с душой
+
+Запрос владельца: заголовок «Ансамбль танца „Ликование“ — студия с душой», приглашение на бесплатное пробное занятие, танцы для детей от 2,5 лет и взрослых в Санкт-Петербурге, индивидуальный подход.
+
+Визуальная основа — реальная фотография ансамбля из материалов школы: `research/assets/045.png`, источник https://static.tildacdn.com/tild3739-6333-4166-a465-383861636630/image_41.png. Люди и костюмы не перерисовывались: `hero-studio-group-v1.webp` получен кодированием без потерь с сохранением всех RGBA-пикселей, что проверено сравнением декодированных данных.
+
+План композиции: слева заголовок, пояснение и основная кнопка записи; справа крупное групповое фото. На телефоне сначала идут текст и запись, затем фотография. Изображение не содержит текста — он остаётся в HTML. Реальные дети — главный образ, сцена и ленты связывают его с оформлением остальных блоков.
+
+Палитра: светлая сцена `#fffaf6`, текст `#191919`, бирюза `#00a6a6`, шампань `#d8b67a`, сиреневый из костюмов `#7d84bd`. Типографика сохраняет Georgia для основного названия и Segoe UI / Arial для пояснений и управления. Контроль композиции: сохранить воздух слева, не закрывать лица текстом и декорациями, не добавлять второй анимированный объект поверх группового фото.
+
+Фон `research/assets/hero-studio-bg-v1.webp` создан встроенным инструментом imagegen. Использован следующий промпт (reference: исходная фотография только как ориентир палитры):
+
+> Create a beautiful wide 16:9 background artwork ONLY for the homepage of the real Saint Petersburg dance ensemble «Ликование», a warm school for children from age 2.5 and adults. Role of attached reference: color and mood reference; its real group portrait will be placed as an unchanged separate foreground layer by the website. DO NOT reproduce, redraw, add, or include any people, faces, children, silhouettes or costumes. No text, letters, logos, UI, buttons or watermarks. Art direction: airy luminous white theatrical space with a pale pearl stage floor fading seamlessly into an almost-white backdrop. On the right half, graceful broad sculptural satin ribbons float in an open loose spiral, a restrained combination of soft turquoise #00a6a6, champagne gold and a small touch of pale lavender from the reference costumes. Ribbons flow around the extreme right and lower edge, framing a large EMPTY central-right zone where the real group portrait will go. A gentle gold theatrical spotlight comes diagonally from upper right; fine, elegant curved orbit lines extend across the floor. Left 55 percent must remain near-white, calm, with very low detail and no objects, to support readable dark live headline and CTA. Right-side stage glow should separate the lavender costumes without dark outlines. Contemporary premium dance campaign photograph / realistic 3D material lighting, warm human atmosphere, sophisticated restrained composition, not a party, no confetti. Background only, generous negative space, wide panoramic composition.
+
+Оба слоя хранятся в проекте. Исходный PNG школы сохранён. Сценический экран с занавесом ниже первого баннера продолжает работать отдельно.
