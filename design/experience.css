@@ -11,16 +11,16 @@
   z-index: -1;
   pointer-events: none;
   background: url('spiral-lines.svg?v=2') center / 100% 100% no-repeat;
-  opacity: .55;
+  opacity: .25;
   filter: blur(.8px);
 }
-.stage-home main > :is(#directions,#prices,#reviews)::before { transform: scaleX(-1); opacity: .45; }
-.stage-home .stage-banner.has-ribbon::before { opacity: .55; }
+.stage-home main > :is(#directions,#prices,#reviews)::before { transform: scaleX(-1); opacity: .2; }
+.stage-home .stage-banner.has-ribbon::before { opacity: .25; }
 @media (max-width:700px) {
   .stage-home main > :is(.stage-banner,#why,#programs,#directions,#teachers,#prices,#schedule,#reviews,#enrol)::before {
     background-size: 850px 100%;
     background-position: 55% center;
-    opacity: .45;
+    opacity: .2;
   }
 }
 
