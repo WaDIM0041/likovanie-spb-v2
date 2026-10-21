@@ -1,5 +1,5 @@
 /* V2 refinements: keep controls in flow and the photograph fully visible. */
-/* Visible ribbon contours extend the opening sculpture across light sections. */
+/* Soft ribbon contours stay behind the content across light sections. */
 .stage-home main > :is(.stage-banner,#why,#programs,#directions,#teachers,#prices,#schedule,#reviews,#enrol) {
   position: relative;
   isolation: isolate;
@@ -11,15 +11,16 @@
   z-index: -1;
   pointer-events: none;
   background: url('spiral-lines.svg?v=2') center / 100% 100% no-repeat;
-  opacity: .95;
+  opacity: .55;
+  filter: blur(.8px);
 }
-.stage-home main > :is(#directions,#prices,#reviews)::before { transform: scaleX(-1); opacity: .85; }
-.stage-home .stage-banner.has-ribbon::before { opacity: 1; }
+.stage-home main > :is(#directions,#prices,#reviews)::before { transform: scaleX(-1); opacity: .45; }
+.stage-home .stage-banner.has-ribbon::before { opacity: .55; }
 @media (max-width:700px) {
   .stage-home main > :is(.stage-banner,#why,#programs,#directions,#teachers,#prices,#schedule,#reviews,#enrol)::before {
     background-size: 850px 100%;
     background-position: 55% center;
-    opacity: .85;
+    opacity: .45;
   }
 }
 
